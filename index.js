@@ -52,6 +52,9 @@ function latex(src, options) {
           errors.push(lines[i + 1])
         } else if (line.startsWith('!')) {
           errors.push(line)
+        } else if (line.startsWith('<*>')) {
+          errors.push(lines[i])
+          errors.push(lines[i + 1])
         }
       })
     })
