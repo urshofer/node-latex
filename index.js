@@ -154,6 +154,21 @@ function latex(src, options) {
 
     const indexOpts = {cwd: tempPath}
 
+    /**
+     * Create BibTex Command
+     */
+
+     const bibtexCmd = options.bibtex && options.bibtexDB ? 'bibtex' : false
+     var   bibtexArgs = [];
+ 
+     if (options.bibtexDB) {
+       fs.writeFileSync(path.join(tempPath, 'texput.bib'), options.bibtexDB, 'utf8');
+       bibtexArgs.push('-terse');
+       bibtexArgs.push('texput');
+     }
+ 
+     const bibtexOpts = {cwd: tempPath}
+ 
 
     /**
      * Runs a LaTeX child process on the document stream
@@ -184,7 +199,11 @@ function latex(src, options) {
         }
 
         if (indexCmd !== false) {
-          let _indexResult = spawnSync(indexCmd, indexArgs, indexOpts)
+          spawnSync(indexCmd, indexArgs, indexOpts)
+        }
+
+        if (bibtexCmd !== false && completedPasses == 0) {
+          spawnSync(bibtexCmd, bibtexArgs, bibtexOpts)
         }
 
 
